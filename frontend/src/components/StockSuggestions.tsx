@@ -1,16 +1,13 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { mockStockSuggestions } from '@/data/mockData'; // Import mock data
+import { fetchGoodStocksWithRisk } from '@/services/gemini'; // ✅ Gemini API integration
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
 const StockSuggestions = () => {
-  const { data: suggestions = [] } = useQuery({
+  const { data: suggestions = [], isLoading, isError } = useQuery({
     queryKey: ['stock-suggestions'],
-    queryFn: async () => {
-      // Use mock data instead of supabase
-      return mockStockSuggestions;
-    }
+    queryFn: fetchGoodStocksWithRisk
   });
 
   const getRiskBadgeColor = (risk: string) => {
@@ -25,6 +22,14 @@ const StockSuggestions = () => {
         return 'bg-gray-500';
     }
   };
+
+  if (isLoading) {
+    return <p className="text-center">Loading stock suggestions...</p>;
+  }
+
+  if (isError) {
+    return <p className="text-center text-red-600">Failed to load stock suggestions.</p>;
+  }
 
   return (
     <div className="space-y-4">
