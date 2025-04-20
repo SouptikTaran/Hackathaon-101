@@ -32,7 +32,7 @@ const authenticate = async (req, res, next) => {
 app.use(cors({ origin: 'http://localhost:8080' })); // Allow requests from the frontend
 
 // Connect to MongoDB
-mongoose.connect('mongodb+srv://pblsmit2025:oi7c4cQdxjdzpUK3@cluster0.b7kqnh0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
+mongoose.connect('', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }).then(() => console.log('Connected to MongoDB'))
