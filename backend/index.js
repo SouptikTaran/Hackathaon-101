@@ -5,6 +5,7 @@ const cors = require('cors'); // Import cors
 const expenseRoutes = require('./routes/expensesRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const serviceAccount = require('./firebase-service-account.json');
+require('dotenv').config(); // Load environment variables
 
 const app = express();
 
@@ -32,7 +33,7 @@ const authenticate = async (req, res, next) => {
 app.use(cors({ origin: 'http://localhost:8080' })); // Allow requests from the frontend
 
 // Connect to MongoDB
-mongoose.connect('', {
+mongoose.connect(process.env.MONGO_URI, { // Use environment variable for MongoDB URI
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }).then(() => console.log('Connected to MongoDB'))
