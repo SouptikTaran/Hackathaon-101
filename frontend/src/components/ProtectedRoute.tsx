@@ -1,11 +1,18 @@
-
 import { useAuth } from '@/contexts/AuthContext';
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
+import { useEffect } from 'react';
 
 const ProtectedRoute = () => {
   const { session, isLoading } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!session) {
+      navigate('/login'); // Ensure this does not trigger re-renders unnecessarily
+    }
+  }, [session, navigate]);
 
   if (isLoading) {
     return (

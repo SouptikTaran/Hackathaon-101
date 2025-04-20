@@ -1,14 +1,14 @@
-
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { Session, User } from '@supabase/supabase-js';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut as firebaseSignOut, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { auth } from '@/config/firebase'; // Import the auth instance from firebase.ts
 
 interface AuthContextType {
-  session: Session | null;
-  user: User | null;
+  session: { user: { email: string } } | null;
+  currentUser: { email: string; uid: string } | null; // Renamed from user to currentUser
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
   isLoading: boolean;
   error: string | null;
 }
@@ -16,39 +16,34 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [session, setSession] = useState<Session | null>(null);
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [session, setSession] = useState<{ user: { email: string } } | null>(null);
+  const [currentUser, setCurrentUser] = useState<{ email: string; uid: string } | null>(null); // Renamed from user
+  const [isLoading, setIsLoading] = useState(true); // Start with loading state
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setIsLoading(false);
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser) {
+        setSession({ user: { email: firebaseUser.email! } });
+        setCurrentUser({ email: firebaseUser.email!, uid: firebaseUser.uid }); // Updated to setCurrentUser
+      } else {
+        setSession(null);
+        setCurrentUser(null); // Updated to setCurrentUser
+      }
+      setIsLoading(false); // Stop loading once the user state is determined
     });
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        setIsLoading(false);
-      }
-    );
-
-    return () => {
-      subscription.unsubscribe();
-    };
+    return () => unsubscribe(); // Cleanup subscription on unmount
   }, []);
 
   const signIn = async (email: string, password: string) => {
+    setIsLoading(true);
+    setError(null);
     try {
-      setError(null);
-      setIsLoading(true);
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) setError(error.message);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      setSession({ user: { email: user.email! } });
+      setCurrentUser({ email: user.email!, uid: user.uid }); // Updated to setCurrentUser
     } catch (err) {
       setError((err as Error).message);
     } finally {
@@ -57,14 +52,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signUp = async (email: string, password: string) => {
+    setIsLoading(true);
+    setError(null);
     try {
-      setError(null);
-      setIsLoading(true);
-      const { error } = await supabase.auth.signUp({ email, password });
-      if (error) setError(error.message);
-      else {
-        setError(null);
-      }
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      setSession({ user: { email: user.email! } });
+      setCurrentUser({ email: user.email!, uid: user.uid }); // Updated to setCurrentUser
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const signInWithGoogle = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      setSession({ user: { email: user.email! } });
+      setCurrentUser({ email: user.email!, uid: user.uid }); // Updated to setCurrentUser
     } catch (err) {
       setError((err as Error).message);
     } finally {
@@ -73,9 +83,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signOut = async () => {
+    setIsLoading(true);
     try {
-      setIsLoading(true);
-      await supabase.auth.signOut();
+      await firebaseSignOut(auth);
+      setSession(null);
+      setCurrentUser(null); // Updated to setCurrentUser
     } catch (err) {
       setError((err as Error).message);
     } finally {
@@ -87,12 +99,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     <AuthContext.Provider
       value={{
         session,
-        user,
+        currentUser, // Updated to currentUser
         signIn,
         signUp,
         signOut,
+        signInWithGoogle,
         isLoading,
-        error
+        error,
       }}
     >
       {children}

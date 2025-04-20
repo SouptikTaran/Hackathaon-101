@@ -1,21 +1,26 @@
-
 import React from 'react';
 import { Progress } from './ui/progress';
-import { useExpense } from '@/contexts/ExpenseContext';
 import { cn } from '@/lib/utils';
 
-const DailyLimitProgress: React.FC = () => {
-  const { dailyLimit } = useExpense();
-  
-  const percentage = Math.min((dailyLimit.current / dailyLimit.limit) * 100, 100);
-  const isOverLimit = dailyLimit.current > dailyLimit.limit;
-  
+interface DailyLimitProgressProps {
+  data: {
+    spent: number;
+    limit: number;
+  };
+}
+
+const DailyLimitProgress: React.FC<DailyLimitProgressProps> = ({ data }) => {
+  const { spent, limit } = data;
+
+  const percentage = Math.min((spent / limit) * 100, 100);
+  const isOverLimit = spent > limit;
+
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
         <p className="text-sm font-medium">Daily Spending</p>
         <p className="text-sm font-medium">
-          ${dailyLimit.current.toFixed(2)} / ${dailyLimit.limit.toFixed(2)}
+          ${spent.toFixed(2)} / ${limit.toFixed(2)}
         </p>
       </div>
       <Progress 
@@ -24,7 +29,7 @@ const DailyLimitProgress: React.FC = () => {
       />
       {isOverLimit && (
         <p className="text-xs text-expense animate-fade-in">
-          You're ${(dailyLimit.current - dailyLimit.limit).toFixed(2)} over your daily limit
+          You're ${(spent - limit).toFixed(2)} over your daily limit
         </p>
       )}
     </div>

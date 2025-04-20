@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
+import { mockStockSuggestions } from '@/data/mockData'; // Import mock data
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
@@ -9,13 +8,8 @@ const StockSuggestions = () => {
   const { data: suggestions = [] } = useQuery({
     queryKey: ['stock-suggestions'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('stock_suggestions')
-        .select('*')
-        .order('created_at', { ascending: false });
-        
-      if (error) throw error;
-      return data;
+      // Use mock data instead of supabase
+      return mockStockSuggestions;
     }
   });
 

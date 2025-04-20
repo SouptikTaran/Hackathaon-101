@@ -11,12 +11,12 @@ export interface Expense {
 }
 
 export type ExpenseCategory = 
-  | "food" 
-  | "travel" 
-  | "bills" 
-  | "entertainment" 
-  | "shopping" 
-  | "other";
+  | "Food" 
+  | "Travel" 
+  | "Bills" 
+  | "Entertainment" 
+  | "Shopping" 
+  | "Other";
 
 export interface CategoryLimit {
   category: ExpenseCategory;

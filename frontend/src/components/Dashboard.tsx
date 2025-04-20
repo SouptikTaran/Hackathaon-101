@@ -1,5 +1,5 @@
-
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -15,8 +15,37 @@ import ImportTransactions from '@/components/ImportTransactions';
 import { Skeleton } from "@/components/ui/skeleton";
 
 const Dashboard: React.FC = () => {
-  const { categoryLimits, isLoading } = useExpense();
-  
+  const { isLoading } = useExpense();
+  const [categoryLimits, setCategoryLimits] = useState([]);
+  const [recentExpenses, setRecentExpenses] = useState([]);
+  const [spendingTrends, setSpendingTrends] = useState([]);
+  const [expenseChartData, setExpenseChartData] = useState([]);
+  const [dailyLimitData, setDailyLimitData] = useState({ spent: 0, limit: 0 });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [categoryLimitsRes, recentExpensesRes, spendingTrendsRes, expenseChartRes, dailyLimitRes] = await Promise.all([
+          axios.get('http://localhost:3000/api/category-limits'),
+          axios.get('http://localhost:3000/api/recent-expenses'),
+          axios.get('http://localhost:3000/api/spending-trends'),
+          axios.get('http://localhost:3000/api/expense-chart'),
+          axios.get('http://localhost:3000/api/daily-limit'),
+        ]);
+
+        setCategoryLimits(categoryLimitsRes.data);
+        setRecentExpenses(recentExpensesRes.data);
+        setSpendingTrends(spendingTrendsRes.data);
+        setExpenseChartData(expenseChartRes.data);
+        setDailyLimitData(dailyLimitRes.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -70,7 +99,7 @@ const Dashboard: React.FC = () => {
                 <CardTitle>Daily Limit</CardTitle>
               </CardHeader>
               <CardContent>
-                <DailyLimitProgress />
+                <DailyLimitProgress data={dailyLimitData} />
               </CardContent>
             </Card>
             
@@ -80,7 +109,7 @@ const Dashboard: React.FC = () => {
                 <p className="text-sm text-muted-foreground">Last 7 days</p>
               </CardHeader>
               <CardContent>
-                <SpendingTrends />
+                <SpendingTrends data={spendingTrends} />
               </CardContent>
             </Card>
           </div>
@@ -93,7 +122,7 @@ const Dashboard: React.FC = () => {
             </TabsList>
             
             <TabsContent value="expenses" className="space-y-4">
-              <RecentExpensesList />
+              <RecentExpensesList data={recentExpenses} />
             </TabsContent>
             
             <TabsContent value="categories">
@@ -110,7 +139,7 @@ const Dashboard: React.FC = () => {
                   <CardTitle>Monthly Expense Breakdown</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ExpenseChart />
+                  <ExpenseChart data={expenseChartData} />
                 </CardContent>
               </Card>
             </TabsContent>

@@ -1,44 +1,14 @@
-
-import React, { useMemo } from 'react';
+import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { useExpense } from '@/contexts/ExpenseContext';
 
-const SpendingTrends: React.FC = () => {
-  const { expenses } = useExpense();
-  
-  const chartData = useMemo(() => {
-    // Get the past 7 days
-    const days = [];
-    const today = new Date();
-    for (let i = 6; i >= 0; i--) {
-      const date = new Date(today);
-      date.setDate(today.getDate() - i);
-      days.push({
-        date,
-        label: date.toLocaleDateString('en-US', { weekday: 'short' }),
-        key: date.toISOString().split('T')[0]
-      });
-    }
-    
-    // Group expenses by day
-    const expensesByDay = days.map(day => {
-      const dayExpenses = expenses.filter(expense => {
-        const expenseDate = new Date(expense.date).toISOString().split('T')[0];
-        return expenseDate === day.key;
-      });
-      
-      const total = dayExpenses.reduce((sum, expense) => sum + expense.amount, 0);
-      
-      return {
-        name: day.label,
-        date: day.key,
-        amount: dayExpenses.length ? total : 0
-      };
-    });
-    
-    return expensesByDay;
-  }, [expenses]);
-  
+const SpendingTrends: React.FC<{ data: { date: string; amount: number }[] }> = ({ data }) => {
+
+  // Format the data for the chart
+  const chartData = data.map((item) => ({
+    name: new Date(item.date).toLocaleDateString('en-US', { weekday: 'short' }),
+    amount: item.amount,
+  }));
+
   return (
     <div className="h-[200px] w-full">
       <ResponsiveContainer width="100%" height="100%">

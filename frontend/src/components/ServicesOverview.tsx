@@ -1,27 +1,13 @@
-
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
 import { Card, CardContent } from '@/components/ui/card';
 import { format } from 'date-fns';
 
-const ServicesOverview = () => {
-  const { data: services = [] } = useQuery({
-    queryKey: ['services'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('services')
-        .select('*')
-        .order('renewal_date', { ascending: true });
-        
-      if (error) throw error;
-      return data;
-    }
-  });
+const ServicesOverview = ({ data = [] }) => {
+  console.log('Services Overview Data:', data);
 
   return (
     <div className="space-y-4">
-      {services.map((service) => (
+      {data.map((service) => (
         <Card key={service.id}>
           <CardContent className="flex justify-between items-center p-4">
             <div>
@@ -34,8 +20,8 @@ const ServicesOverview = () => {
           </CardContent>
         </Card>
       ))}
-      
-      {services.length === 0 && (
+
+      {data.length === 0 && (
         <p className="text-center text-muted-foreground">No active subscriptions</p>
       )}
     </div>

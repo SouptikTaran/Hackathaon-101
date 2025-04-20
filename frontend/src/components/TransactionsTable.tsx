@@ -1,14 +1,17 @@
-
 import React from 'react';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { useExpense } from '@/contexts/ExpenseContext';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { format } from 'date-fns';
 import { getCategoryColor } from '@/data/mockData';
 
-const TransactionsTable = () => {
-  const { expenses } = useExpense();
-  
-  const sortedExpenses = [...expenses].sort(
+const TransactionsTable = ({ data }) => {
+  const sortedExpenses = [...data].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
 
@@ -30,15 +33,19 @@ const TransactionsTable = () => {
             <TableCell>{expense.description || expense.title}</TableCell>
             <TableCell>
               <div className="flex items-center gap-2">
-                <div 
-                  className="w-2 h-2 rounded-full" 
+                <div
+                  className="w-2 h-2 rounded-full"
                   style={{ backgroundColor: getCategoryColor(expense.category) }}
                 />
                 <span className="capitalize">{expense.category}</span>
               </div>
             </TableCell>
-            <TableCell>${expense.amount.toFixed(2)}</TableCell>
-            <TableCell className="capitalize">{expense.source || 'manual'}</TableCell>
+            <TableCell className="font-medium text-right text-green-600">
+              ${expense.amount.toFixed(2)}
+            </TableCell>
+            <TableCell className="capitalize text-sm text-gray-500">
+              {expense.source || 'manual'}
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>

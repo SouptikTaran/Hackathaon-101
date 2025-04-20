@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate, Navigate } from 'react-router-dom';
@@ -8,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import GoogleAuthButton from '@/components/GoogleLoginButton'; // Import GoogleAuthButton
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -22,18 +22,22 @@ const Login = () => {
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    await signIn(email, password);
-    if (!error) {
+    try {
+      await signIn(email, password);
       toast.success("Signed in successfully!");
       navigate('/');
+    } catch (err) {
+      toast.error(err.message || "An error occurred during sign-in.");
     }
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    await signUp(email, password);
-    if (!error) {
+    try {
+      await signUp(email, password);
       toast.success("Account created successfully! You can now sign in.");
+    } catch (err) {
+      toast.error(err.message || "An error occurred during sign-up.");
     }
   };
 
@@ -41,7 +45,7 @@ const Login = () => {
     <div className="flex min-h-screen items-center justify-center px-4 bg-gradient-to-b from-background to-muted/20">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-2xl font-bold">Budget Blitz</CardTitle>
+          <CardTitle className="text-2xl font-bold">DECRD</CardTitle>
           <CardDescription>
             Sign in to manage your finances and track your expenses
           </CardDescription>
@@ -74,14 +78,9 @@ const Login = () => {
                     required
                   />
                 </div>
-                {error && (
-                  <div className="text-sm text-destructive bg-destructive/10 p-2 rounded-md">
-                    {error}
-                  </div>
-                )}
               </CardContent>
               
-              <CardFooter>
+              <CardFooter className="flex flex-col space-y-4">
                 <Button 
                   type="submit" 
                   className="w-full" 
@@ -94,6 +93,8 @@ const Login = () => {
                     </>
                   ) : 'Sign In'}
                 </Button>
+                {/* Add Google Auth Button */}
+                <GoogleAuthButton />
               </CardFooter>
             </form>
           </TabsContent>
@@ -121,14 +122,9 @@ const Login = () => {
                   />
                   <p className="text-xs text-muted-foreground">Password must be at least 6 characters</p>
                 </div>
-                {error && (
-                  <div className="text-sm text-destructive bg-destructive/10 p-2 rounded-md">
-                    {error}
-                  </div>
-                )}
               </CardContent>
               
-              <CardFooter>
+              <CardFooter className="flex flex-col space-y-4">
                 <Button 
                   type="submit" 
                   className="w-full" 
@@ -141,6 +137,8 @@ const Login = () => {
                     </>
                   ) : 'Create Account'}
                 </Button>
+                {/* Add Google Auth Button */}
+                <GoogleAuthButton />
               </CardFooter>
             </form>
           </TabsContent>

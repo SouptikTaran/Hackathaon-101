@@ -14,7 +14,7 @@ import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Analytics from "./pages/Analytics";
 import Calendar from "./pages/Calendar";
-import Expenses from "./pages/Expenses";
+import Expenses from "@/pages/Expenses";
 import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient({

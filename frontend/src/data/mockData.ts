@@ -1,4 +1,3 @@
-
 import { Expense, CategoryLimit, DailyLimit } from "../types";
 
 export const mockExpenses: Expense[] = [
@@ -61,12 +60,12 @@ export const mockExpenses: Expense[] = [
 ];
 
 export const mockCategoryLimits: CategoryLimit[] = [
-  { category: "food", limit: 500, current: 185.25 },
-  { category: "travel", limit: 200, current: 64.25 },
-  { category: "bills", limit: 300, current: 134.99 },
-  { category: "entertainment", limit: 150, current: 25.99 },
-  { category: "shopping", limit: 200, current: 89.95 },
-  { category: "other", limit: 100, current: 0 },
+  { category: "Food", limit: 500, current: 185.25 },
+  { category: "Travel", limit: 200, current: 64.25 },
+  { category: "Bills", limit: 300, current: 134.99 },
+  { category: "Entertainment", limit: 150, current: 25.99 },
+  { category: "Shopping", limit: 200, current: 89.95 },
+  { category: "Other", limit: 100, current: 0 },
 ];
 
 export const mockDailyLimit: DailyLimit = {
@@ -77,13 +76,70 @@ export const mockDailyLimit: DailyLimit = {
 
 export const getCategoryColor = (category: string): string => {
   const categoryColors: Record<string, string> = {
-    food: '#F59E0B',
-    travel: '#3B82F6',
-    bills: '#8B5CF6',
-    entertainment: '#EC4899',
-    shopping: '#06B6D4',
-    other: '#6B7280',
+    Food: '#F59E0B',
+    Travel: '#3B82F6',
+    Bills: '#8B5CF6',
+    Entertainment: '#EC4899',
+    Shopping: '#06B6D4',
+    Other: '#6B7280',
   };
   
   return categoryColors[category] || categoryColors.other;
 };
+
+export const mockServices = [
+  {
+    id: "1",
+    name: "Netflix",
+    cost: 15.99,
+    renewal_date: new Date(new Date().setDate(new Date().getDate() + 10)).toISOString(),
+  },
+  {
+    id: "2",
+    name: "Spotify",
+    cost: 9.99,
+    renewal_date: new Date(new Date().setDate(new Date().getDate() + 20)).toISOString(),
+  },
+  {
+    id: "3",
+    name: "Amazon Prime",
+    cost: 12.99,
+    renewal_date: new Date(new Date().setDate(new Date().getDate() + 5)).toISOString(),
+  },
+  {
+    id: "4",
+    name: "Disney+",
+    cost: 7.99,
+    renewal_date: new Date(new Date().setDate(new Date().getDate() + 15)).toISOString(),
+  },
+];
+
+export const mockStockSuggestions = [
+  {
+    id: 1,
+    company_name: "TechCorp Inc.",
+    stock_symbol: "TCI",
+    risk_level: "High",
+    suggestion: "Consider investing for short-term gains.",
+    potential_gain: 15,
+    created_at: new Date(new Date().setDate(new Date().getDate() - 1)).toISOString(),
+  },
+  {
+    id: 2,
+    company_name: "GreenEnergy Ltd.",
+    stock_symbol: "GEL",
+    risk_level: "Medium",
+    suggestion: "Good for long-term investment.",
+    potential_gain: 10,
+    created_at: new Date(new Date().setDate(new Date().getDate() - 5)).toISOString(),
+  },
+  {
+    id: 3,
+    company_name: "RetailMart",
+    stock_symbol: "RM",
+    risk_level: "Low",
+    suggestion: "Stable stock with consistent returns.",
+    potential_gain: 5,
+    created_at: new Date(new Date().setDate(new Date().getDate() - 10)).toISOString(),
+  },
+];

@@ -1,37 +1,16 @@
-
-import React, { useMemo } from 'react';
+import React from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
-import { useExpense } from '@/contexts/ExpenseContext';
 import { getCategoryColor } from '@/data/mockData';
 
-interface CategoryTotal {
-  name: string;
-  value: number;
-  color: string;
-}
+const ExpenseChart: React.FC<{ data: { category: string; amount: number ;  }[] }> = ({ data }) => {
 
-const ExpenseChart: React.FC = () => {
-  const { getMonthlyExpenses } = useExpense();
-  
-  const chartData = useMemo(() => {
-    const monthlyExpenses = getMonthlyExpenses();
-    
-    // Group by category
-    const categoryTotals = monthlyExpenses.reduce<Record<string, number>>((acc, expense) => {
-      const category = expense.category;
-      if (!acc[category]) acc[category] = 0;
-      acc[category] += expense.amount;
-      return acc;
-    }, {});
-    
-    // Convert to chart format
-    return Object.entries(categoryTotals).map(([name, value]) => ({
-      name: name.charAt(0).toUpperCase() + name.slice(1),
-      value,
-      color: getCategoryColor(name)
-    }));
-  }, [getMonthlyExpenses]);
-  
+  // Format the data for the chart
+  const chartData = data.map((item) => ({
+    name: item.category,
+    value: item.amount,
+    color: getCategoryColor(item.category),
+  }));
+
   // Don't render if there's no data
   if (chartData.length === 0) {
     return (
@@ -40,7 +19,7 @@ const ExpenseChart: React.FC = () => {
       </div>
     );
   }
-  
+
   return (
     <div className="h-[300px] w-full">
       <ResponsiveContainer width="100%" height="100%">

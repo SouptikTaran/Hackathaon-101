@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useExpense } from '@/contexts/ExpenseContext';
 import { Card } from '@/components/ui/card';
@@ -46,32 +45,30 @@ const formatDate = (dateString: string): string => {
   }
 };
 
-const RecentExpensesList: React.FC = () => {
-  const { expenses } = useExpense();
-  
-  // Get the 5 most recent expenses
-  const recentExpenses = [...expenses]
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, 5);
-  
+const RecentExpensesList: React.FC<{ data: any[] }> = ({ data }) => {
+
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-medium">Recent Expenses</h3>
       <div className="space-y-2">
-        {recentExpenses.map(expense => (
-          <Card key={expense.id} className="flex items-center justify-between p-3">
-            <div className="flex items-center gap-3">
-              <div className="rounded-full bg-secondary p-2">
-                <CategoryIcon category={expense.category} />
+        {data.length > 0 ? (
+          data.map((expense) => (
+            <Card key={expense.id} className="flex items-center justify-between p-3">
+              <div className="flex items-center gap-3">
+                <div className="rounded-full bg-secondary p-2">
+                  <CategoryIcon category={expense.category || 'other'} />
+                </div>
+                <div>
+                  <p className="font-medium">{expense.description}</p>
+                  <p className="text-xs text-muted-foreground">{formatDate(expense.date)}</p>
+                </div>
               </div>
-              <div>
-                <p className="font-medium">{expense.title}</p>
-                <p className="text-xs text-muted-foreground">{formatDate(expense.date)}</p>
-              </div>
-            </div>
-            <p className="font-semibold text-expense">${expense.amount.toFixed(2)}</p>
-          </Card>
-        ))}
+              <p className="font-semibold text-expense">${expense.amount.toFixed(2)}</p>
+            </Card>
+          ))
+        ) : (
+          <p className="text-sm text-muted-foreground">No recent expenses available.</p>
+        )}
       </div>
     </div>
   );
