@@ -16,6 +16,8 @@ import Analytics from "./pages/Analytics";
 import Calendar from "./pages/Calendar";
 import Expenses from "@/pages/Expenses";
 import Settings from "./pages/Settings";
+import Challenge from "./pages/Challenge";
+import Optimize from "./pages/Optimise";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -51,6 +53,8 @@ const App = () => {
                       <Route path="/" element={<Dashboard />} />
                       <Route path="/analytics" element={<Analytics />} />
                       <Route path="/calendar" element={<Calendar />} />
+                      <Route path="/Challenge" element={<Challenge />} />
+                      <Route path="/optimise" element={<Optimize />} />
                       <Route path="/expenses" element={<Expenses />} />
                       <Route path="/settings" element={<Settings />} />
                       {/* <Route path="/import-history" element={<PlaceholdersAndVanishInputDemo />} /> */}

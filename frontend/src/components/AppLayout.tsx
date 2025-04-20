@@ -14,7 +14,9 @@ import {
   LogOut,
   Moon,
   Sun,
-  ArrowDownCircle
+  ArrowDownCircle,
+  User,
+  Lightbulb
 } from 'lucide-react';
 import { ExpandableChatDemo } from '@/components/chat-component'; // Import the chat component
 
@@ -59,6 +61,8 @@ const AppLayout: React.FC<AppLayoutProps> = ({ darkMode, toggleDarkMode }) => {
     { id: 'analytics', label: 'Analytics', icon: <PieChart className="h-5 w-5" />, to: '/analytics' },
     { id: 'calendar', label: 'Calendar', icon: <Calendar className="h-5 w-5" />, to: '/calendar' },
     { id: 'expenses', label: 'Expenses', icon: <CreditCard className="h-5 w-5" />, to: '/expenses' },
+    { id: 'expenses', label: 'Challenge a Friend', icon: <User className="h-5 w-5" />, to: '/Challenge' },
+    { id: 'expenses', label: 'Optimise', icon: <Lightbulb className="h-5 w-5" />, to: '/optimise' },
     { id: 'settings', label: 'Settings', icon: <Settings className="h-5 w-5" />, to: '/settings' },
   ];
 
