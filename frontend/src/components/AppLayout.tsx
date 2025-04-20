@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -17,6 +16,7 @@ import {
   Sun,
   ArrowDownCircle
 } from 'lucide-react';
+import { ExpandableChatDemo } from '@/components/chat-component'; // Import the chat component
 
 interface SidebarLinkProps {
   icon: React.ReactNode;
@@ -55,7 +55,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ darkMode, toggleDarkMode }) => {
 
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard className="h-5 w-5" />, to: '/' },
-    { id: 'imports', label: 'Import History', icon: <ArrowDownCircle className="h-5 w-5" />, to: '/import-history' },
+    // { id: 'imports', label: 'Import History', icon: <ArrowDownCircle className="h-5 w-5" />, to: '/import-history' },
     { id: 'analytics', label: 'Analytics', icon: <PieChart className="h-5 w-5" />, to: '/analytics' },
     { id: 'calendar', label: 'Calendar', icon: <Calendar className="h-5 w-5" />, to: '/calendar' },
     { id: 'expenses', label: 'Expenses', icon: <CreditCard className="h-5 w-5" />, to: '/expenses' },
@@ -71,7 +71,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ darkMode, toggleDarkMode }) => {
   const renderSidebarContent = () => (
     <div className="flex flex-col h-full">
       <div className="px-4 py-6 flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Budget Blitz</h1>
+        <h1 className="text-2xl font-bold">DECRD</h1>
         {!isMobile && <UserMenu />}
       </div>
       
@@ -130,6 +130,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({ darkMode, toggleDarkMode }) => {
           <Outlet />
         </div>
       </main>
+
+      {/* Add the chat component */}
+      <ExpandableChatDemo />
     </div>
   );
 };

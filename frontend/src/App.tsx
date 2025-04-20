@@ -8,7 +8,7 @@ import { ExpenseProvider } from "@/contexts/ExpenseContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import AppLayout from "@/components/AppLayout";
 import Dashboard from "@/components/Dashboard";
-import ImportHistory from "./pages/ImportHistory";
+import PlaceholdersAndVanishInputDemo from "./pages/ImportHistory";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -53,7 +53,7 @@ const App = () => {
                       <Route path="/calendar" element={<Calendar />} />
                       <Route path="/expenses" element={<Expenses />} />
                       <Route path="/settings" element={<Settings />} />
-                      <Route path="/import-history" element={<ImportHistory />} />
+                      {/* <Route path="/import-history" element={<PlaceholdersAndVanishInputDemo />} /> */}
                     </Route>
                   </Route>
                   <Route path="*" element={<NotFound />} />
